@@ -12,8 +12,8 @@
 #include <core/Renderer.h>
 #include <core/Scene.h>
 #include <core/Pipeline.h>
-#include "input/KeyEvent.h"
-#include "HPMSLogic.h"
+#include <input/KeyEvent.h>
+#include <states/HPMSLogic.h>
 
 namespace hpms
 {

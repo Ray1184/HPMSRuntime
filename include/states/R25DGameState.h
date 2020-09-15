@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <GameState.h>
+#include <states/GameState.h>
 #include <core/techniques/R25DPipeline.h>
 
 namespace hpms
