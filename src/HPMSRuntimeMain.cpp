@@ -4,7 +4,7 @@
 
 #include <core/CustomLogic.h>
 #include <core/Simulator.h>
-#include "HPMSLogic.h"
+#include <states/HPMSLogic.h>
 
 #if !defined(_DEBUG) && !defined(NDEBUG)
 

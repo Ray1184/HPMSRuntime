@@ -12,14 +12,31 @@ include(Shared.cmake)
 
 install_from_repo(https://github.com/Ray1184/HPMSEngine.git HPMSEngine master TRUE /include/)
 
-install_from_repo(https://github.com/g-truc/glm.git GLM master TRUE /)
-
 install_from_repo(https://github.com/LuaDist/lua.git LUA master TRUE /src/)
 
-install_from_repo(https://github.com/vinniefalco/LuaBridge LUABRIDGE master TRUE /Source/LuaBridge/)
+# Lua configuration copy
+set(DEP_PATH ${CMAKE_CURRENT_BINARY_DIR}/_deps)
+set(LUA_BUILD_PATH ${DEP_PATH}/lua-build)
+set(LUA_SRC_PATH ${DEP_PATH}/lua-src/src)
+configure_file(${LUA_BUILD_PATH}/luaconf.h ${LUA_SRC_PATH}/luaconf.h COPYONLY)
+
+install_from_repo(https://github.com/vinniefalco/LuaBridge.git LUABRIDGE master TRUE /Source/LuaBridge/)
+
+include_directories(${DEP_PATH}/glfw-src/include)
+include_directories(${DEP_PATH}/glm-src)
+include_directories(${DEP_PATH}/physfs-src/src)
+include_directories(${DEP_PATH}/pods-src/include)
 
 add_definitions(-DSTB_IMAGE_IMPLEMENTATION -DSTB_IMAGE_STATIC -DGLM_ENABLE_EXPERIMENTAL)
 
+add_executable(HPMSRuntime src/HPMSRuntimeMain.cpp src/logic/items/Collisor.cpp)
 
-add_executable(HPMSRuntime src/Main.cpp)
 target_link_libraries(HPMSRuntime liblua LuaBridge HPMSEngine)
+
+# Post build
+set(HPMSENGINE_DLL HPMSEngine${CMAKE_DEBUG_POSTFIX}.dll)
+
+add_custom_command(TARGET HPMSRuntime
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy ${DEP_PATH}/hpmsengine-build/${HPMSENGINE_DLL} ${CMAKE_CURRENT_BINARY_DIR}/${HPMSENGINE_DLL}
+        )

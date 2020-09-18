@@ -12,7 +12,7 @@
 #include <core/Names.h>
 #include <core/Renderer.h>
 #include <core/CGAPIManager.h>
-#include <GameState.h>
+#include <states/GameState.h>
 #include <states/R25DGameState.h>
 #include <logic/LogicItemsCache.h>
 
