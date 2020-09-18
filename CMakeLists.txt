@@ -29,7 +29,7 @@ include_directories(${DEP_PATH}/pods-src/include)
 
 add_definitions(-DSTB_IMAGE_IMPLEMENTATION -DSTB_IMAGE_STATIC -DGLM_ENABLE_EXPERIMENTAL)
 
-add_executable(HPMSRuntime src/HPMSRuntimeMain.cpp src/logic/items/Collisor.cpp)
+add_executable(HPMSRuntime src/HPMSRuntimeMain.cpp src/logic/items/Collisor.cpp src/logic/SectorUtils.cpp)
 
 target_link_libraries(HPMSRuntime liblua LuaBridge HPMSEngine)
 
