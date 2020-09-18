@@ -45,7 +45,7 @@ if (MSYS OR MINGW)
             POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/dist/libgcc_s_seh-1.dll ${CMAKE_CURRENT_BINARY_DIR}/libgcc_s_seh-1.dll
             COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/dist/libwinpthread-1.dll ${CMAKE_CURRENT_BINARY_DIR}/libwinpthread-1.dll
-            COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/dist/libstdc++6.dll ${CMAKE_CURRENT_BINARY_DIR}/libstdc++6.dll
+            COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/dist/libstdc++-6.dll ${CMAKE_CURRENT_BINARY_DIR}/libstdc++-6.dll
             )
 
 endif ()
