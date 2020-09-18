@@ -40,3 +40,12 @@ add_custom_command(TARGET HPMSRuntime
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy ${DEP_PATH}/hpmsengine-build/${HPMSENGINE_DLL} ${CMAKE_CURRENT_BINARY_DIR}/${HPMSENGINE_DLL}
         )
+if (MSYS OR MINGW)
+    add_custom_command(TARGET HPMSRuntime
+            POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/dist/libgcc_s_seh-1.dll ${CMAKE_CURRENT_BINARY_DIR}/libgcc_s_seh-1.dll
+            COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/dist/libwinpthread-1.dll ${CMAKE_CURRENT_BINARY_DIR}/libwinpthread-1.dll
+            COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/dist/libstdc++6.dll ${CMAKE_CURRENT_BINARY_DIR}/libstdc++6.dll
+            )
+
+endif ()
