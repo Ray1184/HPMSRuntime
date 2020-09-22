@@ -15,7 +15,9 @@ install_from_repo(https://github.com/Ray1184/HPMSEngine.git HPMSEngine master TR
 install_from_repo(https://github.com/LuaDist/lua.git LUA master TRUE /src/)
 
 # Lua configuration copy
-set(DEP_PATH ${CMAKE_CURRENT_BINARY_DIR}/_deps)
+if (NOT DEFINED DEP_PATH)
+    set(DEP_PATH ${CMAKE_CURRENT_BINARY_DIR}/_deps)
+endif ()
 set(LUA_BUILD_PATH ${DEP_PATH}/lua-build)
 set(LUA_SRC_PATH ${DEP_PATH}/lua-src/src)
 configure_file(${LUA_BUILD_PATH}/luaconf.h ${LUA_SRC_PATH}/luaconf.h COPYONLY)
@@ -29,7 +31,14 @@ include_directories(${DEP_PATH}/pods-src/include)
 
 add_definitions(-DSTB_IMAGE_IMPLEMENTATION -DSTB_IMAGE_STATIC -DGLM_ENABLE_EXPERIMENTAL)
 
-add_executable(HPMSRuntime src/HPMSRuntimeMain.cpp src/logic/items/Collisor.cpp src/logic/SectorUtils.cpp)
+set(SOURCES
+        src/logic/CalcUtils.cpp
+        src/logic/SectorUtils.cpp
+        src/logic/LogicItemsCache.cpp
+        src/logic/items/Collisor.cpp
+        src/HPMSRuntimeMain.cpp)
+
+add_executable(HPMSRuntime ${SOURCES})
 
 target_link_libraries(HPMSRuntime liblua LuaBridge HPMSEngine)
 
