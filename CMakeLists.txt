@@ -37,10 +37,10 @@ set(SOURCES
         src/logic/LogicItemsCache.cpp
         src/logic/items/Collisor.cpp)
 
-if (NOT DEFINED CREATE_RUNTIME_LIB)
-    add_executable(HPMSRuntime ${SOURCES} src/HPMSRuntimeMain.cpp)
-else ()
+if (CREATE_RUNTIME_LIB)
     add_library(HPMSRuntime ${SOURCES})
+else ()
+    add_executable(HPMSRuntime ${SOURCES} src/HPMSRuntimeMain.cpp)
 endif ()
 target_link_libraries(HPMSRuntime liblua LuaBridge HPMSEngine)
 
