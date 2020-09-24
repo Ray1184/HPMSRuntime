@@ -2,12 +2,16 @@
  * File Collisor.cpp
  */
 
-#include <logic/items/Collisor.h>
+#include <logic/controllers/Collisor.h>
 
-void hpms::Collisor::CheckAndMove(const glm::vec3& nextPosition, const glm::vec2 direction)
+void hpms::Collisor::Update()
 {
+    if (!active || !outOfDate)
+    {
+        return;
+    }
 
-
+    outOfDate = false;
     Triangle nextTriangle = hpms::SampleTriangle(nextPosition, walkMap, tolerance);
 
     if (nextTriangle.GetSectorId() != UNDEFINED_SECTOR || ignore || walkMap->DummyMap())
@@ -21,12 +25,12 @@ void hpms::Collisor::CheckAndMove(const glm::vec3& nextPosition, const glm::vec2
         // Check potential collisions.
         for (const auto& side : nextTriangle.GetPerimetralSides())
         {
-            vec2pair_t sidePair = hpms::GetSideCoordsFromTriangle(nextTriangle, side);
-            float t = hpms::IntersectRayLineSegment(actor->GetPosition(), direction, sidePair.a, sidePair.b);
+            std::pair<glm::vec2, glm::vec2> sidePair = hpms::GetSideCoordsFromTriangle(nextTriangle, side);
+            float t = hpms::IntersectRayLineSegment(actor->GetPosition(), direction, sidePair.first, sidePair.second);
             // Correct side.
             if (t > -1)
             {
-                glm::vec2 n = glm::normalize(hpms::Perperndicular(sidePair.b - sidePair.a));
+                glm::vec2 n = glm::normalize(hpms::Perperndicular(sidePair.first - sidePair.second));
                 glm::vec3 v = nextPosition - actor->GetPosition();
                 glm::vec2 vn = n * glm::dot(glm::vec2(v.x, v.z), n);
                 glm::vec2 vt = glm::vec2(v.x, v.z) - vn;

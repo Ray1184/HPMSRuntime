@@ -31,25 +31,9 @@ namespace hpms
         return sectorName == SampleTriangle(actor, walkMap, tolerance).GetSectorId();
     }
 
-    typedef struct vec2pair
-    {
-        glm::vec2 a;
-        glm::vec2 b;
 
-        vec2pair(float ax, float ay, float bx, float by)
-        {
-            a = glm::vec2(ax, ay);
-            b = glm::vec2(bx, by);
-        }
-
-        vec2pair(const glm::vec2& _a, const glm::vec2& _b)
-        {
-            a = glm::vec2(_a.x, _a.y);
-            b = glm::vec2(_b.x, _b.y);
-        }
-    } vec2pair_t;
 
     glm::vec2 GetSideCoordFromSideIndex(const hpms::Triangle& tri, unsigned int idx);
 
-    vec2pair_t GetSideCoordsFromTriangle(const hpms::Triangle& tri, const hpms::Side& side);
+    std::pair<glm::vec2, glm::vec2> GetSideCoordsFromTriangle(const hpms::Triangle& tri, const hpms::Side& side);
 }

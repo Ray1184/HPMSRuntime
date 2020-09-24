@@ -42,15 +42,15 @@ glm::vec2 hpms::GetSideCoordFromSideIndex(const hpms::Triangle& tri, unsigned in
     }
 }
 
-hpms::vec2pair_t hpms::GetSideCoordsFromTriangle(const hpms::Triangle& tri, const hpms::Side& side)
+std::pair<glm::vec2, glm::vec2> hpms::GetSideCoordsFromTriangle(const hpms::Triangle& tri, const hpms::Side& side)
 {
     for (const auto& s : tri.GetPerimetralSides())
     {
         if (s == side)
         {
-            return {GetSideCoordFromSideIndex(tri, s.idx1), GetSideCoordFromSideIndex(tri, s.idx2)};
+            return std::make_pair(GetSideCoordFromSideIndex(tri, s.idx1), GetSideCoordFromSideIndex(tri, s.idx2));
         }
     }
-    return {0, 0, 0, 0};
-
+    return std::make_pair(glm::vec2(), glm::vec2());
 }
+

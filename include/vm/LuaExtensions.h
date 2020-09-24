@@ -13,6 +13,11 @@
 #include <core/Camera.h>
 #include <core/Scene.h>
 #include <input/KeyEvent.h>
+#include <logic/CalcUtils.h>
+#include <logic/controllers/Controller.h>
+#include <logic/controllers/Collisor.h>
+#include <logic/controllers/Animator.h>
+#include <logic/LogicItemsCache.h>
 
 namespace hpms
 {
@@ -37,9 +42,7 @@ namespace hpms
 
     glm::vec3 GetDirection(const glm::quat& rot, const glm::vec3& forward)
     {
-        glm::mat3 rotMat = glm::mat3_cast(rot);
-        glm::vec3 dir = rotMat * forward;
-        return glm::normalize(dir);
+        return hpms::CalcDirection(rot, forward);
     }
 
     float ToRadians(float degrees)
@@ -282,6 +285,81 @@ namespace hpms
     void AMAddPictureToScene(Picture* obj, Scene* scene)
     {
         scene->AddRenderObject(obj);
+    }
+
+
+    // LUA Logic.
+    hpms::WalkMap* LCreateWalkMap(const std::string& path)
+    {
+        auto* w = hpms::SafeNew<hpms::WalkMap>(path, LogicItemsCache::Instance().GetRoomMap(path));
+        return w;
+    }
+
+    void LDeleteWalkMap(WalkMap* walkMap)
+    {
+        hpms::SafeDelete(walkMap);
+    }
+
+    hpms::Collisor* LCreateCollisor(Actor* actor, WalkMap* walkMap, float tolerance)
+    {
+        auto* c = hpms::SafeNew<hpms::Collisor>(actor, walkMap, tolerance);
+        return c;
+    }
+
+    void LDeleteCollisor(Collisor* collisor)
+    {
+        hpms::SafeDelete(collisor);
+    }
+
+    hpms::Animator* LCreateAnimator(Entity* entity)
+    {
+        auto* a = hpms::SafeNew<hpms::Animator>(entity);
+        return a;
+    }
+
+    void LDeleteAnimator(Animator* anim)
+    {
+        hpms::SafeDelete(anim);
+    }
+
+    void LEnableController(hpms::Controller* controller)
+    {
+        controller->SetActive(true);
+    }
+
+    void LDisableController(hpms::Controller* controller)
+    {
+        controller->SetActive(false);
+    }
+
+    void LUpdateAnimator(hpms::Animator* anim)
+    {
+        anim->Update();
+    }
+
+    void LUpdateCollisor(hpms::Collisor* coll)
+    {
+        coll->Update();
+    }
+
+    void LMoveCollisor(hpms::Collisor* collisor, glm::vec3 position, glm::vec2 direction)
+    {
+        collisor->Move(position, direction);
+    }
+
+    void LRegisterAnimation(hpms::Animator* animator, const std::string& animName, int startFrame, int endFrame)
+    {
+        animator->RegistryAnimation(animName, startFrame, endFrame);
+    }
+
+    void LSetAnimation(hpms::Animator* animator, const std::string& animName)
+    {
+        animator->SetCurrentAnimation(animName);
+    }
+
+    void LRewind(hpms::Animator* animator)
+    {
+        animator->Rewind();
     }
 
 }

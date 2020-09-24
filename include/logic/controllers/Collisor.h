@@ -8,30 +8,35 @@
 #include <logic/items/WalkMap.h>
 #include <logic/SectorUtils.h>
 #include <glm/gtx/perpendicular.hpp>
+#include <logic/controllers/Controller.h>
 
-
-
+#define VEC_FORWARD glm::vec3(0, 0, 1)
 
 namespace hpms
 {
-    class Collisor : public Actor
+    class Collisor : public Actor, Controller
     {
     private:
         hpms::Actor* actor;
         hpms::WalkMap* walkMap;
         float tolerance;
-        hpms::Triangle currentTriangle;
         bool ignore;
+        glm::vec3 nextPosition;
+        glm::vec2 direction;
+        bool outOfDate;
+        hpms::Triangle currentTriangle{};
     public:
 
+
+
         Collisor(Actor* actor, WalkMap* walkMap, float tolerance) : actor(actor), walkMap(walkMap),
-                                                                    tolerance(tolerance), ignore(false)
+                                                                    tolerance(tolerance), ignore(false), outOfDate(false)
         {}
 
 
         inline void SetPosition(const glm::vec3& position) override
         {
-            actor->SetPosition(position);
+            Move(position, hpms::CalcDirection(actor->GetRotation(), VEC_FORWARD));
         }
 
         inline const glm::vec3& GetPosition() const override
@@ -74,7 +79,26 @@ namespace hpms
             return "Collisor";
         }
 
-        void CheckAndMove(const glm::vec3& nextPosition, const glm::vec2 direction);
+        inline void Move(const glm::vec3& nextPosition, const glm::vec2 direction)
+        {
+            Collisor::nextPosition = nextPosition;
+            Collisor::direction = direction;
+            outOfDate = true;
+
+        }
+
+        inline const Triangle& GetCurrentTriangle() const
+        {
+            return currentTriangle;
+        }
+
+        inline void SetCurrentTriangle(const Triangle& currentTriangle)
+        {
+            LOG_ERROR("Cannot set collisor sector from script.");
+        }
+
+        void Update() override;
+
 
     };
 }

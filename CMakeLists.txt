@@ -35,7 +35,8 @@ set(SOURCES
         src/logic/CalcUtils.cpp
         src/logic/SectorUtils.cpp
         src/logic/LogicItemsCache.cpp
-        src/logic/items/Collisor.cpp)
+        src/logic/controllers/Collisor.cpp
+        src/logic/controllers/Animator.cpp)
 
 if (CREATE_RUNTIME_LIB)
     add_library(HPMSRuntime ${SOURCES})

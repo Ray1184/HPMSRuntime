@@ -18,6 +18,8 @@ extern "C" {
 #include <vm/LuaExtensions.h>
 #include <core/items/Entity.h>
 #include <input/KeyEvent.h>
+#include <logic/controllers/Collisor.h>
+#include <logic/controllers/Animator.h>
 
 using namespace luabridge;
 
@@ -252,5 +254,65 @@ namespace hpms
                     .endClass()
                     .endNamespace();
         }
+
+        static void RegisterLogic(lua_State* state)
+        {
+            getGlobalNamespace(state)
+                    .beginNamespace("hpms")
+                    .addFunction("make_walkmap", &hpms::LCreateWalkMap)
+                    .addFunction("delete_walkmap", &hpms::LDeleteWalkMap)
+                    .addFunction("make_collisor", &hpms::LCreateCollisor)
+                    .addFunction("delete_collisor", &hpms::LDeleteCollisor)
+                    .addFunction("make_animator", &hpms::LCreateAnimator)
+                    .addFunction("delete_animator", &hpms::LDeleteAnimator)
+                    .addFunction("enable_controller", &hpms::LEnableController)
+                    .addFunction("disable_controller", &hpms::LDisableController)
+                    .addFunction("update_animator", &hpms::LUpdateAnimator)
+                    .addFunction("update_collisor", &hpms::LUpdateCollisor)
+                    .addFunction("move_collisor_dir", &hpms::LMoveCollisor)
+                    .addFunction("add_anim", &hpms::LRegisterAnimation)
+                    .addFunction("set_anim", &hpms::LSetAnimation)
+                    .addFunction("rewind_anim", &hpms::LRewind)
+                    .endNamespace();
+        }
+
+        static void RegisterWalkMap(lua_State* state)
+        {
+            getGlobalNamespace(state)
+                    .beginNamespace("hpms")
+                    .beginClass<WalkMap>("walkmap")
+                    .addProperty("name", &hpms::WalkMap::GetName, &hpms::WalkMap::SetName)
+                    .endClass()
+                    .endNamespace();
+        }
+
+        static void RegisterCollisor(lua_State* state)
+        {
+            getGlobalNamespace(state)
+                    .beginNamespace("hpms")
+                    .beginClass<Collisor>("collisor")
+                    .addProperty("position", &hpms::Collisor::GetPosition, &hpms::Collisor::SetPosition)
+                    .addProperty("rotation", &hpms::Collisor::GetRotation, &hpms::Collisor::SetRotation)
+                    .addProperty("sector", &hpms::Collisor::GetCurrentTriangle, &hpms::Collisor::SetCurrentTriangle)
+                    .endClass()
+                    .endNamespace();
+        }
+
+        static void RegisterAnimator(lua_State* state)
+        {
+            getGlobalNamespace(state)
+                    .beginNamespace("hpms")
+                    .beginClass<Animator>("animator")
+                    .addProperty("anim_channel", &hpms::Animator::GetCurrentAnimChannel, &hpms::Animator::SetCurrentAnimChannel)
+                    .addProperty("loop", &hpms::Animator::IsLoop, &hpms::Animator::SetLoop)
+                    .addProperty("play", &hpms::Animator::IsPlay, &hpms::Animator::SetPlay)
+                    .addProperty("slow_down_factor", &hpms::Animator::GetSlowDownFactor, &hpms::Animator::SetSlowDownFactor)
+                    .endClass()
+                    .endNamespace();
+        }
+
+
+
+
     };
 }

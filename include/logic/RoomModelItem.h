@@ -100,7 +100,7 @@ namespace hpms
         Triangle(const std::string& groupId) : sectorId(groupId)
         {}
 
-        Triangle()
+        Triangle() : sectorId(UNDEFINED_SECTOR)
         {}
 
         bool IsPerimetral() const
