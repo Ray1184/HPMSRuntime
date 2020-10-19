@@ -76,6 +76,7 @@ namespace hpms
             hpms::LuaRegister::RegisterScene(state);
             hpms::LuaRegister::RegisterCamera(state);
             hpms::LuaRegister::RegisterWalkMap(state);
+            hpms::LuaRegister::RegisterTriangle(state);
             hpms::LuaRegister::RegisterCollisor(state);
             hpms::LuaRegister::RegisterAnimator(state);
             hpms::LuaRegister::RegisterLogic(state);

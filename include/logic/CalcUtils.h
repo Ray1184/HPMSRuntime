@@ -31,7 +31,7 @@ namespace hpms
         return IntersectRayLineSegment(origin.x, origin.z, dir.x, dir.y, a.x, a.y, b.x, b.y);
     }
 
-    inline glm::vec2 Perperndicular(const glm::vec2 origin)
+    inline glm::vec2 Perpendicular(const glm::vec2 origin)
     {
         return {origin.y, -origin.x};
     }

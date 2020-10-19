@@ -29,7 +29,6 @@ namespace hpms
 
         inline void CUpdate() override
         {
-
         }
 
         inline void CCleanup() override

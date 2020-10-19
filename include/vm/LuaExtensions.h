@@ -227,6 +227,7 @@ namespace hpms
         hpms::SafeDelete(node);
     }
 
+
     void AMDeleteNodeAndActors(SceneNode* node)
     {
         node->DeleteAllActors();
@@ -287,6 +288,11 @@ namespace hpms
         scene->AddRenderObject(obj);
     }
 
+    void AMUpdateCamera(Camera* cam)
+    {
+        cam->UpdateViewMatrix();
+    }
+
 
     // LUA Logic.
     hpms::WalkMap* LCreateWalkMap(const std::string& path)
@@ -300,11 +306,19 @@ namespace hpms
         hpms::SafeDelete(walkMap);
     }
 
-    hpms::Collisor* LCreateCollisor(Actor* actor, WalkMap* walkMap, float tolerance)
+    hpms::Collisor* LCreateEntityCollisor(Entity* entity, WalkMap* walkMap, float tolerance)
     {
-        auto* c = hpms::SafeNew<hpms::Collisor>(actor, walkMap, tolerance);
+        auto* c = hpms::SafeNew<hpms::Collisor>(entity, walkMap, tolerance);
         return c;
     }
+
+    hpms::Collisor* LCreateNodeCollisor(SceneNode* node, WalkMap* walkMap, float tolerance)
+    {
+        auto* c = hpms::SafeNew<hpms::Collisor>(node, walkMap, tolerance);
+        return c;
+    }
+
+
 
     void LDeleteCollisor(Collisor* collisor)
     {

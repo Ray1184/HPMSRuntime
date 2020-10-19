@@ -129,6 +129,8 @@
 #define KEY_RIGHT_SUPER        347
 #define KEY_MENU               348
 
+#define KEYS_SIZE 15
+
 namespace hpms
 {
     struct KeyEvent : public HPMSObject

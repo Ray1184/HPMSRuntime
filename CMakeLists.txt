@@ -51,6 +51,7 @@ set(HPMSENGINE_DLL HPMSEngine${CMAKE_DEBUG_POSTFIX}.dll)
 add_custom_command(TARGET HPMSRuntime
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy ${DEP_PATH}/hpmsengine-build/${HPMSENGINE_DLL} ${CMAKE_CURRENT_BINARY_DIR}/${HPMSENGINE_DLL}
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/data ${CMAKE_CURRENT_BINARY_DIR}/data
         )
 if (MSYS OR MINGW)
     add_custom_command(TARGET HPMSRuntime

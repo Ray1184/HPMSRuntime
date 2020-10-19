@@ -6,9 +6,8 @@
 
 void hpms::Animator::Update()
 {
-    if (!play && currentFrame >= currentRange.second)
+    if (!play && currentFrame == currentRange.first)
     {
-        Rewind();
         return;
     }
     if (frameCounter >= FRAMECOUNTER_MAX)

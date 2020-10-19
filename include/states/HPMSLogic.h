@@ -79,6 +79,7 @@ namespace hpms
 
         inline void Update(Window* window) override
         {
+
             if (currentState->GetStatus() == hpms::Status::NEW)
             {
                 currentState->Init();

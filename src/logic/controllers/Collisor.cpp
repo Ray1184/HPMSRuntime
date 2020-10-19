@@ -23,14 +23,14 @@ void hpms::Collisor::Update()
     } else
     {
         // Check potential collisions.
-        for (const auto& side : nextTriangle.GetPerimetralSides())
+        for (const auto& side : currentTriangle.GetPerimetralSides())
         {
-            std::pair<glm::vec2, glm::vec2> sidePair = hpms::GetSideCoordsFromTriangle(nextTriangle, side);
+            std::pair<glm::vec2, glm::vec2> sidePair = hpms::GetSideCoordsFromTriangle(currentTriangle, side);
             float t = hpms::IntersectRayLineSegment(actor->GetPosition(), direction, sidePair.first, sidePair.second);
             // Correct side.
             if (t > -1)
             {
-                glm::vec2 n = glm::normalize(hpms::Perperndicular(sidePair.first - sidePair.second));
+                glm::vec2 n = glm::normalize(hpms::Perpendicular(sidePair.first - sidePair.second));
                 glm::vec3 v = nextPosition - actor->GetPosition();
                 glm::vec2 vn = n * glm::dot(glm::vec2(v.x, v.z), n);
                 glm::vec2 vt = glm::vec2(v.x, v.z) - vn;

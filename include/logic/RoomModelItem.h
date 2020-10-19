@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <pods/pods.h>
 #include <common/HPMSObject.h>
+#include <common/Utils.h>
 
 #define UNDEFINED_SECTOR "___undef_sector___"
 
@@ -115,7 +116,7 @@ namespace hpms
 
         void SetSectorId(const std::string& sectorId)
         {
-            Triangle::sectorId = sectorId;
+            LOG_ERROR("Cannot change triangle sector id from script.");
         }
 
         void SetPerimetralSides(const std::vector<Side>& sides)

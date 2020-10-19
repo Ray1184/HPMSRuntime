@@ -14,15 +14,15 @@
 
 namespace hpms
 {
-    class Collisor : public Actor, Controller
+    class Collisor : public Actor, public Controller
     {
     private:
         hpms::Actor* actor;
         hpms::WalkMap* walkMap;
         float tolerance;
         bool ignore;
-        glm::vec3 nextPosition;
-        glm::vec2 direction;
+        glm::vec3 nextPosition{};
+        glm::vec2 direction{};
         bool outOfDate;
         hpms::Triangle currentTriangle{};
     public:
@@ -36,7 +36,9 @@ namespace hpms
 
         inline void SetPosition(const glm::vec3& position) override
         {
-            Move(position, hpms::CalcDirection(actor->GetRotation(), VEC_FORWARD));
+            glm::vec3 dir3 = hpms::CalcDirection(actor->GetRotation(), VEC_FORWARD);
+            glm::vec2 dir2(dir3.x, dir3.z);
+            Move(position, dir2);
         }
 
         inline const glm::vec3& GetPosition() const override
@@ -81,9 +83,13 @@ namespace hpms
 
         inline void Move(const glm::vec3& nextPosition, const glm::vec2 direction)
         {
+            if (Collisor::nextPosition != nextPosition)
+            {
+                outOfDate = true;
+            }
             Collisor::nextPosition = nextPosition;
             Collisor::direction = direction;
-            outOfDate = true;
+
 
         }
 
@@ -94,7 +100,7 @@ namespace hpms
 
         inline void SetCurrentTriangle(const Triangle& currentTriangle)
         {
-            LOG_ERROR("Cannot set collisor sector from script.");
+            LOG_ERROR("Cannot change collisor sector from script.");
         }
 
         void Update() override;

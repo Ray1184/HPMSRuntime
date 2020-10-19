@@ -113,6 +113,8 @@ namespace hpms
                     .addConstructor < void(*)
             (void) > ()
                     .addConstructor < void(*)
+            (glm::quat) > ()
+                    .addConstructor < void(*)
             (float, float, float, float) > ()
                     .addData("x", &glm::quat::x)
                     .addData("y", &glm::quat::y)
@@ -252,6 +254,7 @@ namespace hpms
                     .addProperty("position", &hpms::Camera::GetPosition, &hpms::Camera::SetPosition)
                     .addProperty("rotation", &hpms::Camera::GetRotation, &hpms::Camera::SetRotation)
                     .endClass()
+                    .addFunction("update_view", &hpms::AMUpdateCamera)
                     .endNamespace();
         }
 
@@ -261,7 +264,8 @@ namespace hpms
                     .beginNamespace("hpms")
                     .addFunction("make_walkmap", &hpms::LCreateWalkMap)
                     .addFunction("delete_walkmap", &hpms::LDeleteWalkMap)
-                    .addFunction("make_collisor", &hpms::LCreateCollisor)
+                    .addFunction("make_node_collisor", &hpms::LCreateNodeCollisor)
+                    .addFunction("make_entity_collisor", &hpms::LCreateEntityCollisor)
                     .addFunction("delete_collisor", &hpms::LDeleteCollisor)
                     .addFunction("make_animator", &hpms::LCreateAnimator)
                     .addFunction("delete_animator", &hpms::LDeleteAnimator)
@@ -286,6 +290,16 @@ namespace hpms
                     .endNamespace();
         }
 
+        static void RegisterTriangle(lua_State* state)
+        {
+            getGlobalNamespace(state)
+                    .beginNamespace("hpms")
+                    .beginClass<Triangle>("sector")
+                    .addProperty("id", &hpms::Triangle::GetSectorId, &hpms::Triangle::SetSectorId)
+                    .endClass()
+                    .endNamespace();
+        }
+
         static void RegisterCollisor(lua_State* state)
         {
             getGlobalNamespace(state)
@@ -303,15 +317,15 @@ namespace hpms
             getGlobalNamespace(state)
                     .beginNamespace("hpms")
                     .beginClass<Animator>("animator")
-                    .addProperty("anim_channel", &hpms::Animator::GetCurrentAnimChannel, &hpms::Animator::SetCurrentAnimChannel)
+                    .addProperty("anim_channel", &hpms::Animator::GetCurrentAnimChannel,
+                                 &hpms::Animator::SetCurrentAnimChannel)
                     .addProperty("loop", &hpms::Animator::IsLoop, &hpms::Animator::SetLoop)
                     .addProperty("play", &hpms::Animator::IsPlay, &hpms::Animator::SetPlay)
-                    .addProperty("slow_down_factor", &hpms::Animator::GetSlowDownFactor, &hpms::Animator::SetSlowDownFactor)
+                    .addProperty("slow_down_factor", &hpms::Animator::GetSlowDownFactor,
+                                 &hpms::Animator::SetSlowDownFactor)
                     .endClass()
                     .endNamespace();
         }
-
-
 
 
     };

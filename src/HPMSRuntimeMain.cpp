@@ -6,11 +6,6 @@
 #include <core/Simulator.h>
 #include <states/HPMSLogic.h>
 
-#if !defined(_DEBUG) && !defined(NDEBUG)
-
-#include <conio.h>
-
-#endif
 
 using namespace hpms;
 
@@ -65,7 +60,6 @@ int main()
     ss << "------------------------------";
     LOG_DEBUG(ss.str().c_str());
     LOG_DEBUG("End memory dump report.");
-    getch();
 #endif
     return 0;
 }
