@@ -7,7 +7,7 @@ set(CMAKE_STATIC_LIBRARY_PREFIX)
 
 set(HPMSENGINE_VERSION master)
 set(GLM_VERSION 0.9.9.8)
-set(LUA_VERSION v5-3-4)
+set(LUA_VERSION master)
 set(LUABRIDGE_VERSION 2.6)
 
 include_directories(include)
