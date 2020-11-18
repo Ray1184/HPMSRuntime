@@ -17,7 +17,7 @@ include(Shared.cmake)
 
 install_from_repo(https://github.com/Ray1184/HPMSEngine.git HPMSEngine ${HPMSENGINE_VERSION} TRUE /include/)
 
-install_from_repo(https://github.com/LuaDist/lua.git ${LUA_VERSION} TRUE /src/)
+install_from_repo(https://github.com/LuaDist/lua.git LUA ${LUA_VERSION} TRUE /src/)
 
 # Lua configuration copy
 if (NOT DEFINED DEP_PATH)
