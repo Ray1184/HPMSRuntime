@@ -5,14 +5,19 @@ project(HPMSRuntime)
 set(CMAKE_SHARED_LIBRARY_PREFIX)
 set(CMAKE_STATIC_LIBRARY_PREFIX)
 
+set(HPMSENGINE_VERSION master)
+set(GLM_VERSION 0.9.9.8)
+set(LUA_VERSION v5-3-4)
+set(LUABRIDGE_VERSION 2.6)
+
 include_directories(include)
 
 # Third party
 include(Shared.cmake)
 
-install_from_repo(https://github.com/Ray1184/HPMSEngine.git HPMSEngine master TRUE /include/)
+install_from_repo(https://github.com/Ray1184/HPMSEngine.git HPMSEngine ${HPMSENGINE_VERSION} TRUE /include/)
 
-install_from_repo(https://github.com/LuaDist/lua.git LUA master TRUE /src/)
+install_from_repo(https://github.com/LuaDist/lua.git ${LUA_VERSION} TRUE /src/)
 
 # Lua configuration copy
 if (NOT DEFINED DEP_PATH)
@@ -22,7 +27,7 @@ set(LUA_BUILD_PATH ${DEP_PATH}/lua-build)
 set(LUA_SRC_PATH ${DEP_PATH}/lua-src/src)
 configure_file(${LUA_BUILD_PATH}/luaconf.h ${LUA_SRC_PATH}/luaconf.h COPYONLY)
 
-install_from_repo(https://github.com/vinniefalco/LuaBridge.git LUABRIDGE master TRUE /Source/LuaBridge/)
+install_from_repo(https://github.com/vinniefalco/LuaBridge.git LUABRIDGE ${LUABRIDGE_VERSION} TRUE /Source/LuaBridge/)
 
 include_directories(${DEP_PATH}/glfw-src/include)
 include_directories(${DEP_PATH}/glm-src)

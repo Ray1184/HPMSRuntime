@@ -1,12 +1,17 @@
 -- Scene script.
 common = require("data/scripts/libs/TransformsCommon")
-ctx = require("data/scripts/libs/Context")
+input = require("data/scripts/libs/InputCommon")
+
 scene = {
     name = "Scene_01",
     version = "1.0.0",
     mode = "R25D",
     quit = false,
     setup = function(scene, camera)
+        ctx = { mode = 'play' }
+
+
+
         -- Init function callback.
         e = hpms.make_entity('data/models/01.hmdat')
         w = hpms.make_walkmap('data/maps/Basement.hrdat')
@@ -16,29 +21,29 @@ scene = {
         i = hpms.make_background('data/screens/Inventory.png')
         n = hpms.make_node("NODE_01")
         c = hpms.make_node_collisor(n, w, 1)
-
+        --
         a.anim_channel = 0
         a.loop = true
 
         a.slow_down_factor = 2
 
-        hpms.add_anim(a, 'move', 0, 14)
+        hpms.add_anim(a, 'move', 0, 25)
         hpms.set_anim(a, 'move')
 
-        common.loc_rot_scale(e, 0, 0.1, 0, 0, 180, 0, 8, 8, 8)
-        common.loc_rot_scale(n, -1, 0, 0, 0, 0, 0, 1, 1, 1)
+        common.loc_rot_scale(e, 0, 1.0, 0, 0, 0, 0, 1.1, 1.1, 1.1)
+        common.loc_rot_scale(n, 0, 0, 0, 0, 0, 0, 0.2, 0.2, 0.2)
 
         camera.position = hpms.vec3(3.5, 1, -3)
         camera.rotation = hpms.vec3(0, hpms.to_radians(-120), 0)
         scene.ambient_light = hpms.vec3(1, 1, 1)
         hpms.set_node_entity(n, e)
         hpms.add_node_to_scene(n, scene)
-
+        --
         --hpms.add_entity_to_scene(e, scene)
         hpms.add_picture_to_scene(b, scene)
         hpms.add_picture_to_scene(d, scene)
 
-        ctx.mode = ctx.MODE_PLAY
+        ctx.mode = 'play'
     end,
     input = function(keys)
         speed = 0
@@ -48,29 +53,29 @@ scene = {
         -- Input function callback.
 
         if keys ~= nil then
-            if hpms.action_performed(keys, 'ESC', common.PRESSED) then
+            if hpms.action_performed(keys, 'ESC', input.PRESSED) then
                 scene.quit = true
             end
-            if hpms.action_performed(keys, 'UP', common.PRESSED) then
+            if hpms.action_performed(keys, 'UP', input.PRESSED) then
                 speed = 4
-            elseif hpms.action_performed(keys, 'DOWN', common.PRESSED) then
+            elseif hpms.action_performed(keys, 'DOWN', input.PRESSED) then
                 speed = -4
             else
                 speed = 0
             end
 
-            if hpms.action_performed(keys, 'RIGHT', common.PRESSED) then
+            if hpms.action_performed(keys, 'RIGHT', input.PRESSED) then
                 rotate = -4
-            elseif hpms.action_performed(keys, 'LEFT', common.PRESSED) then
+            elseif hpms.action_performed(keys, 'LEFT', input.PRESSED) then
                 rotate = 4
             else
                 rotate = 0
             end
-            if hpms.action_performed(keys, 'I', common.PRESSED_FIRST_TIME) then
-                if ctx.mode == ctx.MODE_PLAY then
-                    ctx.mode = ctx.MODE_MENU
+            if hpms.action_performed(keys, 'I', input.PRESSED_FIRST_TIME) then
+                if ctx.mode == 'play' then
+                    ctx.mode = 'menu'
                 else
-                    ctx.mode = ctx.MODE_PLAY
+                    ctx.mode = 'play'
                 end
             end
         end
@@ -78,7 +83,7 @@ scene = {
     update = function(scene, camera)
         -- Update loop function callback.
 
-        if ctx.mode == ctx.MODE_PLAY then
+        if ctx.mode == 'play' then
             hpms.add_picture_to_scene(b, scene)
             camera.position = hpms.vec3(3.5, 1, -3)
             camera.rotation = hpms.vec3(0, hpms.to_radians(-120), 0)
@@ -97,6 +102,20 @@ scene = {
             camera.position = hpms.vec3(0, 0, 0)
             camera.rotation = hpms.vec3(0, 0, 0)
             hpms.update_view(camera)
+        end
+
+        hpms.add_picture_to_scene(b, scene)
+        camera.position = hpms.vec3(3.5, 1, -3)
+        camera.rotation = hpms.vec3(0, hpms.to_radians(-120), 0)
+        hpms.update_view(camera)
+        hpms.update_animator(a)
+        hpms.update_collisor(c)
+        common.move_collisor_towards_direction(c, speed / 120.0)
+        common.rotate(n, 0, rotate / 3.0, 0)
+        if speed == 0 then
+            a.play = false
+        else
+            a.play = true
         end
 
     end,
