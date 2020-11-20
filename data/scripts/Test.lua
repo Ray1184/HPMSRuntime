@@ -1,7 +1,7 @@
 -- Scene script.
 common = require("data/scripts/libs/TransformsCommon")
 input = require("data/scripts/libs/InputCommon")
-
+last_anim = ''
 scene = {
     name = "Scene_01",
     version = "1.0.0",
@@ -13,7 +13,7 @@ scene = {
 
 
         -- Init function callback.
-        e = hpms.make_entity('data/models/01.hmdat')
+        e = hpms.make_entity('data/models/Dummy_Anim.hmdat')
         w = hpms.make_walkmap('data/maps/Basement.hrdat')
         a = hpms.make_animator(e)
         b = hpms.make_background('data/screens/B01_B.png')
@@ -27,10 +27,15 @@ scene = {
 
         a.slow_down_factor = 2
 
+        hpms.add_anim(a, 'back', 25, 0)
         hpms.add_anim(a, 'move', 0, 25)
-        hpms.set_anim(a, 'move')
+        hpms.add_anim(a, 'stand', 30, 30)
+        hpms.set_anim(a, 'stand')
+        hpms.rewind_anim(a)
+        last_anim = 'stand'
+        a.play = true
 
-        common.loc_rot_scale(e, 0, 1.0, 0, 0, 0, 0, 1.1, 1.1, 1.1)
+        common.loc_rot_scale(e, 0, 0.8, 0, 0, 180, 0, 1.1, 1.1, 1.1)
         common.loc_rot_scale(n, 0, 0, 0, 0, 0, 0, 0.2, 0.2, 0.2)
 
         camera.position = hpms.vec3(3.5, 1, -3)
@@ -57,17 +62,17 @@ scene = {
                 scene.quit = true
             end
             if hpms.action_performed(keys, 'UP', input.PRESSED) then
-                speed = 4
+                speed = 3
             elseif hpms.action_performed(keys, 'DOWN', input.PRESSED) then
-                speed = -4
+                speed = -3
             else
                 speed = 0
             end
 
             if hpms.action_performed(keys, 'RIGHT', input.PRESSED) then
-                rotate = -4
+                rotate = -5
             elseif hpms.action_performed(keys, 'LEFT', input.PRESSED) then
-                rotate = 4
+                rotate = 5
             else
                 rotate = 0
             end
@@ -92,11 +97,35 @@ scene = {
             hpms.update_collisor(c)
             common.move_collisor_towards_direction(c, speed / 120.0)
             common.rotate(n, 0, rotate / 3.0, 0)
-            if speed == 0 then
-                a.play = false
-            else
-                a.play = true
+
+            if speed == 0 and rotate == 0 and not a.still_playing then
+                if last_anim ~= 'stand' then
+                    last_anim = 'stand'
+                    hpms.set_anim(a, 'stand')
+                    hpms.rewind_anim(a)
+                end
+
+            elseif speed > 0 then
+                if last_anim ~= 'move' then
+                    last_anim = 'move'
+                    hpms.set_anim(a, 'move')
+                    hpms.rewind_anim(a)
+                end
+
+            elseif speed < 0 then
+                if last_anim ~= 'back' then
+                    last_anim = 'back'
+                    hpms.set_anim(a, 'back')
+                    hpms.rewind_anim(a)
+                end
+            elseif rotate ~= 0 then
+                if last_anim ~= 'move' then
+                    last_anim = 'move'
+                    hpms.set_anim(a, 'move')
+                    hpms.rewind_anim(a)
+                end
             end
+
         else
             hpms.add_picture_to_scene(i, scene)
             camera.position = hpms.vec3(0, 0, 0)
@@ -104,19 +133,6 @@ scene = {
             hpms.update_view(camera)
         end
 
-        hpms.add_picture_to_scene(b, scene)
-        camera.position = hpms.vec3(3.5, 1, -3)
-        camera.rotation = hpms.vec3(0, hpms.to_radians(-120), 0)
-        hpms.update_view(camera)
-        hpms.update_animator(a)
-        hpms.update_collisor(c)
-        common.move_collisor_towards_direction(c, speed / 120.0)
-        common.rotate(n, 0, rotate / 3.0, 0)
-        if speed == 0 then
-            a.play = false
-        else
-            a.play = true
-        end
 
     end,
     cleanup = function()

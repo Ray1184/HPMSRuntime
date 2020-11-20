@@ -6,7 +6,10 @@
 
 void hpms::Animator::Update()
 {
-    if (!play && currentFrame == currentRange.first)
+    int first = std::get<0>(currentRange);
+    int last = std::get<1>(currentRange);
+    bool reverse = std::get<2>(currentRange) == BACKWARD;
+    if (!play && currentFrame == first)
     {
         return;
     }
@@ -17,14 +20,36 @@ void hpms::Animator::Update()
 
     if (frameCounter++ % slowDownFactor == 0)
     {
-        if (currentFrame < currentRange.second)
+        if (!reverse && currentFrame < last)
         {
+            stillPlaying = true;
             currentFrame++;
+        } else if (reverse && currentFrame > last)
+        {
+            stillPlaying = true;
+            currentFrame--;
         } else if (loop)
         {
+            stillPlaying = false;
             Rewind();
         }
         entity->SetAnimCurrentIndex(currentAnimChannel);
         entity->SetAnimCurrentFrameIndex(currentFrame);
     }
 }
+
+void hpms::Animator::CheckAndSetCurrentAnimation(const std::string& name)
+{
+    std::string key = lastAnim + "_" + name;
+    auto it = transitionsToInterpolate.find(key);
+    if (it != transitionsToInterpolate.end())
+    {
+        int duration = it->second;
+        interpolating = true;
+        animAfterInterpolate = name;
+        lastChannel = currentAnimChannel;
+    }
+    lastAnim = name;
+    currentRange = animSetsRange[currentAnimChannel][name];
+}
+

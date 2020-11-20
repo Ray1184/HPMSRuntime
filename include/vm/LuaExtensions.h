@@ -363,12 +363,17 @@ namespace hpms
 
     void LRegisterAnimation(hpms::Animator* animator, const std::string& animName, int startFrame, int endFrame)
     {
-        animator->RegistryAnimation(animName, startFrame, endFrame);
+        animator->RegisterAnimation(animName, startFrame, endFrame);
+    }
+
+    void LRegisterAnimationInterpolation(hpms::Animator* animator, const std::string& fromAnim, const std::string& toAnim, int framesDuration)
+    {
+        animator->RegisterInterpolation(fromAnim, toAnim, framesDuration);
     }
 
     void LSetAnimation(hpms::Animator* animator, const std::string& animName)
     {
-        animator->SetCurrentAnimation(animName);
+        animator->CheckAndSetCurrentAnimation(animName);
     }
 
     void LRewind(hpms::Animator* animator)

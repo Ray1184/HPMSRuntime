@@ -14,19 +14,30 @@
 namespace hpms
 {
 
+    enum AnimMode
+    {
+        FORWARD = 0,
+        BACKWARD = 1
+    };
 
     class Animator : public Controller
     {
     private:
         hpms::Entity* entity;
-        std::unordered_map<int, std::unordered_map<std::string, std::pair<int, int>>> animSetsRange;
+        std::unordered_map<int, std::unordered_map<std::string, std::tuple<int, int, int>>> animSetsRange;
         int currentAnimChannel;
-        std::pair<int, int> currentRange;
+        std::tuple<int, int, int> currentRange;
         int currentFrame;
         long frameCounter;
         int slowDownFactor;
         bool play;
         bool loop;
+        bool stillPlaying;
+        std::string lastAnim;
+        int lastChannel;
+        std::string animAfterInterpolate;
+        bool interpolating;
+        std::unordered_map<std::string, int> transitionsToInterpolate;
 
     public:
 
@@ -34,20 +45,24 @@ namespace hpms
         Animator(Entity* entity) : entity(entity),
                                    currentAnimChannel(0),
                                    slowDownFactor(1),
-                                   currentRange({0, 0}),
+                                   currentRange({0, 0, FORWARD}),
                                    currentFrame(0),
                                    play(false),
-                                   frameCounter(0)
+                                   frameCounter(0),
+                                   stillPlaying(false),
+                                   lastAnim("NONE"),
+                                   interpolating(false)
         {}
 
-        inline void RegistryAnimation(const std::string& animName, int startFrame, int endFrame)
+        inline void RegisterAnimation(const std::string& animName, int startFrame, int endFrame)
         {
-            RegistryAnimation(currentAnimChannel, animName, startFrame, endFrame);
+            RegisterAnimation(currentAnimChannel, animName, startFrame, endFrame);
         }
 
-        inline void RegistryAnimation(int animChannel, const std::string& animName, int startFrame, int endFrame)
+        inline void RegisterAnimation(int animChannel, const std::string& animName, int startFrame, int endFrame)
         {
-            animSetsRange[animChannel][animName] = std::make_pair(startFrame, endFrame);
+            int mode = startFrame <= endFrame ? FORWARD : BACKWARD;
+            animSetsRange[animChannel][animName] = std::make_tuple(startFrame, endFrame, mode);
         }
 
         inline int GetCurrentAnimChannel() const
@@ -60,11 +75,7 @@ namespace hpms
             Animator::currentAnimChannel = currentAnimChannel;
         }
 
-        inline void SetCurrentAnimation(const std::string& name)
-        {
-            currentRange = animSetsRange[currentAnimChannel][name];
-            Rewind();
-        }
+        void CheckAndSetCurrentAnimation(const std::string& name);
 
         inline int GetSlowDownFactor() const
         {
@@ -86,6 +97,16 @@ namespace hpms
             Animator::play = play;
         }
 
+        inline bool IsStillPlaying() const
+        {
+            return stillPlaying;
+        }
+
+        inline void SetStillPlaying(bool stillPlaying)
+        {
+            Animator::stillPlaying = stillPlaying;
+        }
+
         inline bool IsLoop() const
         {
             return loop;
@@ -98,7 +119,14 @@ namespace hpms
 
         inline void Rewind()
         {
-            currentFrame = currentRange.first;
+            int mode = std::get<2>(currentRange);
+            currentFrame = std::get<0>(currentRange);
+        }
+
+        inline void RegisterInterpolation(const std::string& fromAnim, const std::string& toAnim, int framesDuration)
+        {
+            std::string key = fromAnim + "_" + toAnim;
+            transitionsToInterpolate.insert({key, framesDuration});
         }
 
 
