@@ -28,10 +28,19 @@ void hpms::Animator::Update()
         {
             stillPlaying = true;
             currentFrame--;
-        } else if (loop)
+        } else
         {
             stillPlaying = false;
-            Rewind();
+            if (interpolating)
+            {
+                interpolating = false;
+                currentAnimChannel = lastChannel;
+                CheckAndSetCurrentAnimation(animAfterInterpolate);
+            }
+            if (loop)
+            {
+                Rewind();
+            }
         }
         entity->SetAnimCurrentIndex(currentAnimChannel);
         entity->SetAnimCurrentFrameIndex(currentFrame);
@@ -42,12 +51,16 @@ void hpms::Animator::CheckAndSetCurrentAnimation(const std::string& name)
 {
     std::string key = lastAnim + "_" + name;
     auto it = transitionsToInterpolate.find(key);
-    if (it != transitionsToInterpolate.end())
+    if (it != transitionsToInterpolate.end() && !interpolating)
     {
-        int duration = it->second;
+        int iterations = it->second;
         interpolating = true;
         animAfterInterpolate = name;
         lastChannel = currentAnimChannel;
+        int first = std::get<0>(currentRange);
+        int last = std::get<1>(currentRange);
+        entity->InterpolateAnimation(first, last, iterations);
+
     }
     lastAnim = name;
     currentRange = animSetsRange[currentAnimChannel][name];

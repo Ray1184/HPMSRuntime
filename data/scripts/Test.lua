@@ -45,6 +45,7 @@ scene = {
         hpms.add_node_to_scene(n, scene)
         --
         --hpms.add_entity_to_scene(e, scene)
+        hpms.add_picture_to_scene(i, scene)
         hpms.add_picture_to_scene(b, scene)
         hpms.add_picture_to_scene(d, scene)
 
@@ -143,6 +144,7 @@ scene = {
         hpms.delete_walkmap(w)
         hpms.delete_entity(e)
         hpms.delete_background(b)
+        hpms.delete_background(i)
         hpms.delete_depth_mask(d)
 
     end
