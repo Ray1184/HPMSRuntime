@@ -275,7 +275,7 @@ namespace hpms
                     .addFunction("update_collisor", &hpms::LUpdateCollisor)
                     .addFunction("move_collisor_dir", &hpms::LMoveCollisor)
                     .addFunction("add_anim", &hpms::LRegisterAnimation)
-                    .addFunction("add_anim_interpolation", &hpms::LRegisterAnimationInterpolation)
+                    .addFunction("anim_sequence_terminated", &hpms::LIsAnimationSequenceFinished)
                     .addFunction("set_anim", &hpms::LSetAnimation)
                     .addFunction("rewind_anim", &hpms::LRewind)
                     .endNamespace();
@@ -321,6 +321,7 @@ namespace hpms
                     .addProperty("anim_channel", &hpms::Animator::GetCurrentAnimChannel,
                                  &hpms::Animator::SetCurrentAnimChannel)
                     .addProperty("loop", &hpms::Animator::IsLoop, &hpms::Animator::SetLoop)
+                    .addProperty("id", &hpms::Animator::GetId, &hpms::Animator::SetId)
                     .addProperty("play", &hpms::Animator::IsPlay, &hpms::Animator::SetPlay)
                     .addProperty("still_playing", &hpms::Animator::IsStillPlaying, &hpms::Animator::SetStillPlaying)
                     .addProperty("slow_down_factor", &hpms::Animator::GetSlowDownFactor,

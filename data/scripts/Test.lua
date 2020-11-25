@@ -1,13 +1,15 @@
 -- Scene script.
 common = require("data/scripts/libs/TransformsCommon")
 input = require("data/scripts/libs/InputCommon")
-last_anim = ''
+anim_util = require("data/scripts/libs/AnimUtil")
+require("data/scripts/libs/Context")
 scene = {
     name = "Scene_01",
     version = "1.0.0",
     mode = "R25D",
     quit = false,
     setup = function(scene, camera)
+        context:inst().dummy = false
         ctx = { mode = 'play' }
 
 
@@ -15,13 +17,13 @@ scene = {
         -- Init function callback.
         e = hpms.make_entity('data/models/Dummy_Anim.hmdat')
         w = hpms.make_walkmap('data/maps/Basement.hrdat')
-        a = hpms.make_animator(e)
+        a = hpms.make_animator(e, 'Dummy_Anim')
         b = hpms.make_background('data/screens/B01_B.png')
         d = hpms.make_depth_mask('data/masks/B01_D.png')
         i = hpms.make_background('data/screens/Inventory.png')
         n = hpms.make_node("NODE_01")
         c = hpms.make_node_collisor(n, w, 1)
-        --
+
         a.anim_channel = 0
         a.loop = true
 
@@ -29,10 +31,10 @@ scene = {
 
         hpms.add_anim(a, 'back', 25, 0)
         hpms.add_anim(a, 'move', 0, 25)
-        hpms.add_anim(a, 'stand', 30, 30)
-        hpms.set_anim(a, 'stand')
+        hpms.add_anim(a, 'to_rest', 26, 30)
+        hpms.add_anim(a, 'rest', 30, 30)
+        hpms.set_anim(a, 'rest')
         hpms.rewind_anim(a)
-        last_anim = 'stand'
         a.play = true
 
         common.loc_rot_scale(e, 0, 0.8, 0, 0, 180, 0, 1.1, 1.1, 1.1)
@@ -99,33 +101,18 @@ scene = {
             common.move_collisor_towards_direction(c, speed / 120.0)
             common.rotate(n, 0, rotate / 3.0, 0)
 
-            if speed == 0 and rotate == 0 and not a.still_playing then
-                if last_anim ~= 'stand' then
-                    last_anim = 'stand'
-                    hpms.set_anim(a, 'stand')
-                    hpms.rewind_anim(a)
-                end
+            local play_strategy = {
+                animator = a,
+                anim_sets = {
+                    { 'move', function() return speed > 0 or (rotate ~= 0 and speed == 0) end },
+                    { 'back', function() return speed < 0 end },
+                    { 'rest', function() return speed == 0 and rotate == 0 end }
+                }
+            }
 
-            elseif speed > 0 then
-                if last_anim ~= 'move' then
-                    last_anim = 'move'
-                    hpms.set_anim(a, 'move')
-                    hpms.rewind_anim(a)
-                end
+            anim_util.play(play_strategy)
 
-            elseif speed < 0 then
-                if last_anim ~= 'back' then
-                    last_anim = 'back'
-                    hpms.set_anim(a, 'back')
-                    hpms.rewind_anim(a)
-                end
-            elseif rotate ~= 0 then
-                if last_anim ~= 'move' then
-                    last_anim = 'move'
-                    hpms.set_anim(a, 'move')
-                    hpms.rewind_anim(a)
-                end
-            end
+
 
         else
             hpms.add_picture_to_scene(i, scene)
@@ -133,8 +120,6 @@ scene = {
             camera.rotation = hpms.vec3(0, 0, 0)
             hpms.update_view(camera)
         end
-
-
     end,
     cleanup = function()
         -- Close function callback.
@@ -146,6 +131,5 @@ scene = {
         hpms.delete_background(b)
         hpms.delete_background(i)
         hpms.delete_depth_mask(d)
-
     end
 }

@@ -11,6 +11,9 @@
 
 #define FRAMECOUNTER_MAX 3628799
 
+#define DEFAULT_CHANNEL 0
+#define INTERPOLATION_CHANNEL 1
+
 namespace hpms
 {
 
@@ -35,15 +38,12 @@ namespace hpms
         bool stillPlaying;
         std::string lastAnim;
         int lastChannel;
-        std::string animAfterInterpolate;
-        bool interpolating;
-        std::unordered_map<std::string, int> transitionsToInterpolate;
-
+        std::string id;
     public:
 
 
-        Animator(Entity* entity) : entity(entity),
-                                   currentAnimChannel(0),
+        Animator(Entity* entity, std::string id) : entity(entity),
+                                   currentAnimChannel(DEFAULT_CHANNEL),
                                    slowDownFactor(1),
                                    currentRange({0, 0, FORWARD}),
                                    currentFrame(0),
@@ -51,7 +51,8 @@ namespace hpms
                                    frameCounter(0),
                                    stillPlaying(false),
                                    lastAnim("NONE"),
-                                   interpolating(false)
+                                   id(id),
+                                   lastChannel(DEFAULT_CHANNEL)
         {}
 
         inline void RegisterAnimation(const std::string& animName, int startFrame, int endFrame)
@@ -123,12 +124,20 @@ namespace hpms
             currentFrame = std::get<0>(currentRange);
         }
 
-        inline void RegisterInterpolation(const std::string& fromAnim, const std::string& toAnim, int framesDuration)
+        inline bool IsSequenceFinished()
         {
-            std::string key = fromAnim + "_" + toAnim;
-            transitionsToInterpolate.insert({key, framesDuration});
+            return currentFrame == std::get<1>(currentRange);
         }
 
+        const std::string& GetId() const
+        {
+            return id;
+        }
+
+        void SetId(const std::string& id)
+        {
+            LOG_ERROR("Cannot change animator id from script.");
+        }
 
         void Update() override;
 

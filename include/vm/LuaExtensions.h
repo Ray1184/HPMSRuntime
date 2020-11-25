@@ -325,9 +325,9 @@ namespace hpms
         hpms::SafeDelete(collisor);
     }
 
-    hpms::Animator* LCreateAnimator(Entity* entity)
+    hpms::Animator* LCreateAnimator(Entity* entity, const std::string& id)
     {
-        auto* a = hpms::SafeNew<hpms::Animator>(entity);
+        auto* a = hpms::SafeNew<hpms::Animator>(entity, id);
         return a;
     }
 
@@ -366,14 +366,14 @@ namespace hpms
         animator->RegisterAnimation(animName, startFrame, endFrame);
     }
 
-    void LRegisterAnimationInterpolation(hpms::Animator* animator, const std::string& fromAnim, const std::string& toAnim, int framesDuration)
-    {
-        animator->RegisterInterpolation(fromAnim, toAnim, framesDuration);
-    }
-
     void LSetAnimation(hpms::Animator* animator, const std::string& animName)
     {
         animator->CheckAndSetCurrentAnimation(animName);
+    }
+
+    void LIsAnimationSequenceFinished(hpms::Animator* animator)
+    {
+        animator->IsSequenceFinished();
     }
 
     void LRewind(hpms::Animator* animator)

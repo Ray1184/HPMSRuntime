@@ -53,6 +53,22 @@ if context:inst().dummy then
             utils.debug('Rotating actor ' .. a.dummy_id)
         end,
 
+        add_anim = function(a, name, from, to)
+            utils.debug('Adding anim ' .. name .. ' to '.. a.dummy_id)
+        end,
+
+        set_anim = function(a, name)
+            utils.debug('Setting anim ' .. name .. ' for '.. a.dummy_id)
+        end,
+
+        rewind_anim = function(a)
+            utils.debug('Rewinding anim for '.. a.dummy_id)
+        end,
+
+        anim_sequence_terminated = function(a)
+            return false
+        end,
+
         update_controller = function(ctrl, type)
 
         end,
@@ -106,6 +122,10 @@ else
         -- Logic.
         move_collisor_dir = hpms.move_collisor_dir,
         rotate = hpms.rotate,
+        add_anim = hpms.add_anim,
+        set_anim = hpms.set_anim,
+        rewind_anim = hpms.rewind_anim,
+        anim_sequence_terminated = hpms.anim_sequence_terminated,
         update_controller = function(ctrl, type)
             if type == 'animator' or type == 'ANIMATOR' then
                 update_animator(ctrl)
