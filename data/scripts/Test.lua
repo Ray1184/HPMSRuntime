@@ -29,10 +29,9 @@ scene = {
 
         a.slow_down_factor = 2
 
-        hpms.add_anim(a, 'back', 25, 0)
         hpms.add_anim(a, 'move', 0, 25)
-        hpms.add_anim(a, 'to_rest', 26, 30)
-        hpms.add_anim(a, 'rest', 30, 30)
+        hpms.add_anim(a, 'back', 26, 51)
+        hpms.add_anim(a, 'rest', 53, 53)
         hpms.set_anim(a, 'rest')
         hpms.rewind_anim(a)
         a.play = true

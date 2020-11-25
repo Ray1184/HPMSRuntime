@@ -42,17 +42,17 @@ namespace hpms
     public:
 
 
-        Animator(Entity* entity, std::string id) : entity(entity),
-                                   currentAnimChannel(DEFAULT_CHANNEL),
-                                   slowDownFactor(1),
-                                   currentRange({0, 0, FORWARD}),
-                                   currentFrame(0),
-                                   play(false),
-                                   frameCounter(0),
-                                   stillPlaying(false),
-                                   lastAnim("NONE"),
-                                   id(id),
-                                   lastChannel(DEFAULT_CHANNEL)
+        Animator(Entity* entity, const std::string& id) : entity(entity),
+                                                          currentAnimChannel(DEFAULT_CHANNEL),
+                                                          slowDownFactor(1),
+                                                          currentRange({0, 0, FORWARD}),
+                                                          currentFrame(0),
+                                                          play(false),
+                                                          frameCounter(0),
+                                                          stillPlaying(false),
+                                                          lastAnim("NONE"),
+                                                          id(id),
+                                                          lastChannel(DEFAULT_CHANNEL)
         {}
 
         inline void RegisterAnimation(const std::string& animName, int startFrame, int endFrame)
@@ -129,12 +129,12 @@ namespace hpms
             return currentFrame == std::get<1>(currentRange);
         }
 
-        const std::string& GetId() const
+        inline const std::string& GetId() const
         {
             return id;
         }
 
-        void SetId(const std::string& id)
+        inline void SetId(const std::string& id)
         {
             LOG_ERROR("Cannot change animator id from script.");
         }

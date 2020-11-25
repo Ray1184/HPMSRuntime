@@ -8,7 +8,6 @@ void hpms::Animator::Update()
 {
     int first = std::get<0>(currentRange);
     int last = std::get<1>(currentRange);
-    bool reverse = std::get<2>(currentRange) == BACKWARD;
     if (!play && currentFrame == first)
     {
         return;
@@ -20,21 +19,15 @@ void hpms::Animator::Update()
 
     if (frameCounter++ % slowDownFactor == 0)
     {
-        if (!reverse && currentFrame < last)
+        if (currentFrame < last)
         {
-            stillPlaying = true;
             currentFrame++;
-        } else if (reverse && currentFrame > last)
+        } else if (loop)
         {
-            stillPlaying = true;
-            currentFrame--;
-        } else
-        {
-            stillPlaying = false;
-            if (loop)
-            {
-                Rewind();
-            }
+
+
+            Rewind();
+
         }
         entity->SetAnimCurrentIndex(currentAnimChannel);
         entity->SetAnimCurrentFrameIndex(currentFrame);

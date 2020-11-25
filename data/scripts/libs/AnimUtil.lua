@@ -12,17 +12,14 @@ return {
     play = function(strategy)
         local animator = strategy.animator
         local anim_sets = strategy.anim_sets
-        local prev_valid = false
         for index = 1, #anim_sets do
-            if not prev_valid then
-                local sequence = anim_sets[index][1]
-                local condition = anim_sets[index][2]
-                if condition() and not animator.still_playing and anim_by_entity[animator.id] ~= sequence then
-                    lib.rewind_anim(animator)
-                    anim_by_entity[animator.id] = sequence
-                    lib.set_anim(animator, sequence)
-                    return
-                end
+            local sequence = anim_sets[index][1]
+            local condition = anim_sets[index][2]
+            if condition() and anim_by_entity[animator.id] ~= sequence and lib.anim_sequence_terminated(a) then
+                anim_by_entity[animator.id] = sequence
+                lib.set_anim(animator, sequence)
+                lib.rewind_anim(animator)
+                return
             end
         end
     end

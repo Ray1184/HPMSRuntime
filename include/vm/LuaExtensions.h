@@ -371,7 +371,7 @@ namespace hpms
         animator->CheckAndSetCurrentAnimation(animName);
     }
 
-    void LIsAnimationSequenceFinished(hpms::Animator* animator)
+    bool LIsAnimationSequenceFinished(hpms::Animator* animator)
     {
         animator->IsSequenceFinished();
     }
